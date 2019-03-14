@@ -1,0 +1,19 @@
+[run]
+source=.
+
+[report]
+fail_under=100
+
+exclude_lines =
+    pragma: no cover
+    pragma: todo cover
+    def __str__
+    def __unicode__
+    def __repr__
+    if __name__ == .__main__.:
+
+omit=
+    setup.py
+    */test*
+
+show_missing = True
