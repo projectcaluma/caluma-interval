@@ -1,0 +1,27 @@
+version: "3.4"
+
+services:
+  interval:
+    build:
+      args:
+        - requirements=requirements-dev.txt
+    environment:
+      - CALUMA_URI=http://caluma:8000/graphql
+    volumes:
+      - ./:/app
+    command:
+      [
+        "/bin/sh",
+        "-c",
+        "wait-for-it.sh ${DATABASE_HOST:-db}:${DATABASE_PORT:-5432} -- wait-for-it.sh ${CALUMA_HOST:-caluma}:${CALUMA_PORT:-8000} -- python -m caluma_interval",
+      ]
+
+  db:
+    environment:
+      - POSTGRES_PASSWORD=caluma
+    ports:
+      - "${DATABASE_PORT:-5432}:${DATABASE_PORT:-5432}"
+
+  caluma:
+    environment:
+      - ENV=dev
