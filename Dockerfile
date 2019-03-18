@@ -1,4 +1,4 @@
-FROM python:3.6.8-alpine3.9
+FROM python:3.6.8-alpine3.9@sha256:c3b0a0317d0759a0c0b8cf2b2c60ea09729bc9b7faf464ee67434f45de2bb3d1
 
 ARG requirements=requirements.txt
 
