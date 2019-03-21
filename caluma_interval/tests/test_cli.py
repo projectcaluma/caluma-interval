@@ -19,3 +19,9 @@ def test_main(sys_argv_handler, create_form_to_workflow, cleanup_db):
 
     sys.argv = ["__main__.py", "-c", "http://caluma:8000/graphql"]
     main()
+
+
+def test_main_failure(sys_argv_handler, create_form_to_workflow, cleanup_db, caplog):
+    sys.argv = ["__main__.py", "-c", "http://nothing-here", "-d"]
+    main()
+    assert caplog.records[-1].levelname == "ERROR"

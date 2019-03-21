@@ -1,10 +1,11 @@
 import sys
+from datetime import datetime
 
 import pytest
 
 import psycopg2
-
-from .interval import IntervalManager
+from caluma_interval.client import CalumaClient
+from caluma_interval.interval import IntervalManager
 
 
 @pytest.fixture
@@ -13,8 +14,30 @@ def manager():
 
 
 @pytest.fixture
-def client(manager):
-    return manager.client
+def client():
+    return CalumaClient(endpoint="http://caluma:8000/graphql")
+
+
+@pytest.fixture
+def auth_client():
+    return CalumaClient(
+        endpoint="http://caluma:8000/graphql",
+        oidc_client_id="id",
+        oidc_client_secret="secret",
+        oidc_token_uri="uri",
+    )
+
+
+@pytest.fixture()
+def token():
+    return {
+        "access_token": "6c7dfa20995640c28e0eba82c5c88271",
+        "expires_in": 300,
+        "token_type": "bearer",
+        "scope": ["caluma"],
+        "expires_at": 1553154201.6981535,
+        "expires_at_dt": datetime(2019, 3, 21, 7, 43, 21),
+    }
 
 
 @pytest.fixture

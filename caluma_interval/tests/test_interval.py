@@ -3,28 +3,6 @@ from datetime import date, timedelta
 from isodate.duration import Duration
 
 
-def test_use_client(client):
-    query = """\
-query allForms {
-  allForms{
-    pageInfo {
-      startCursor
-      endCursor
-    }
-    edges {
-      node {
-        name
-        meta
-      }
-    }
-  }
-}\
-"""
-
-    resp = client.execute(query)
-    assert "allForms" in resp["data"]
-
-
 def test_get_intervalled_forms(manager, create_forms, cleanup_db):
     forms = manager.get_intervalled_forms()
     assert len(forms) == 2

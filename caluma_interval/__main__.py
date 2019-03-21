@@ -11,7 +11,7 @@ import sys
 
 from envparse import env
 
-from caluma_interval import interval
+from caluma_interval import client, interval
 
 logger = logging.getLogger(__name__)
 logging.basicConfig()
@@ -36,8 +36,14 @@ def parse_arguments(args):
         help='defaults to "%(default)s"',
     )
     parser.set_defaults(caluma_uri=env("CALUMA_URI", default="http://caluma/graphql"))
+    parser.add_argument("-i", "--oidc-client-id", metavar="STRING", type=str)
+    parser.set_defaults(oidc_client_id=env("OIDC_CLIENT_ID", default=None))
+    parser.add_argument("-s", "--oidc-client-secret", metavar="STRING", type=str)
+    parser.set_defaults(oidc_client_secret=env("OIDC_CLIENT_SECRET", default=None))
+    parser.add_argument("-u", "--oidc-token-uri", metavar="STRING", type=str)
+    parser.set_defaults(oidc_token_uri=env("OIDC_TOKEN_URI", default=None))
     parser.add_argument(
-        "-d", "--debug", action="store_true", help="print " "debug messages"
+        "-d", "--debug", action="store_true", help="print debug messages"
     )
     parser.add_argument(
         "-v", "--version", action="version", version=interval.__version__
@@ -54,15 +60,19 @@ def main():
     """
     args = parse_arguments(sys.argv[1:])
 
-    if args.debug:
-        logger.level = logging.DEBUG
-        interval.logger.level = logging.DEBUG
-    else:
-        logger.level = logging.INFO
-        interval.logger.level = logging.INFO
+    loggers = [logger, interval.logger, client.logger]
+
+    for l in loggers:
+        if args.debug:
+            l.level = logging.DEBUG
+        else:
+            l.level = logging.INFO
 
     manager = interval.IntervalManager(caluma_uri=args.caluma_uri)
-    manager.run()
+    try:
+        manager.run()
+    except Exception as e:
+        logger.exception(e)
 
 
 if __name__ == "__main__":

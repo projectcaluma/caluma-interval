@@ -107,7 +107,8 @@ You can configure caluma_interval with environment variables or CLI arguments, w
 Cli arguments take precedence.
 
 ```
-usage: __main__.py [-h] [-c STRING] [-d] [-v]
+usage: __main__.py [-h] [-c STRING] [-i STRING] [-s STRING] [-u STRING] [-d]
+                   [-v]
 
 Caluma companion app for handling intervalled forms
 
@@ -115,15 +116,30 @@ optional arguments:
   -h, --help            show this help message and exit
   -c STRING, --caluma-uri STRING
                         defaults to "http://caluma:8000/graphql"
+  -i STRING, --oidc-client-id STRING
+  -s STRING, --oidc-client-secret STRING
+  -u STRING, --oidc-token-uri STRING
   -d, --debug           print debug messages
   -v, --version         show program's version number and exit
 ```
 
 The corresponding environment varibles are:
  * CALUMA_URI
+ * OIDC_CLIENT_ID
+ * OIDC_CLIENT_SECRET
+ * OIDC_TOKEN_URI
+
+To enable oidc authentication over plain http (only for testing!), set
+`OAUTHLIB_INSECURE_TRANSPORT` to `1`.
 
 
-## TODO: authorization
+## Authentication
+As caluma uses OpenID Connect (OIDC), we need to fetch a token from the OIDC provider.
+
+For this you have to provide a client id, client secret and a token uri.
+
+If none of them are provided, the client will make unauthenticated request, which
+(hopefully) will fail in your prod setup.
 
 ## ValidationClass
 
