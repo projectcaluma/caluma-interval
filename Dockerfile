@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r ${requirements} && \
     apk --purge del .build-deps
 COPY . /app
 
-CMD /bin/sh -c "wait-for-it.sh ${DATABASE_HOST:-db}:${DATABASE_PORT:-5432} -- wait-for-it.sh ${CALUMA_HOST:-caluma}:${CALUMA_PORT:-8000} -- python -m caluma_interval"
+CMD /bin/sh -c "wait-for-it.sh ${CALUMA_HOST:-caluma}:${CALUMA_PORT:-8000} -- python -m caluma_interval"
