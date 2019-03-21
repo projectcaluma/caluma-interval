@@ -12,20 +12,35 @@ logger = logging.getLogger(__name__)
 
 __title__ = "caluma_interval"
 __description__ = "Caluma companion app for handling intervalled forms"
-__version__ = "1.0.0"
+__version__ = "0.0.1"
 __author__ = "Adfinis SyGroup"
 
 
 class IntervalManager:
-    def __init__(self, caluma_uri=env("CALUMA_URI", default="http://caluma/graphql")):
+    def __init__(
+        self,
+        caluma_uri=env("CALUMA_URI", default="http://caluma/graphql"),
+        oidc_client_id=env("OIDC_CLIENT_ID", default=None),
+        oidc_client_secret=env("OIDC_CLIENT_SECRET", default=None),
+        oidc_token_uri=env("OIDC_TOKEN_URI", default=None),
+    ):
         self.caluma_uri = caluma_uri
+        self.oidc_client_id = oidc_client_id
+        self.oidc_client_secret = oidc_client_secret
+        self.oidc_token_uri = oidc_token_uri
+
         self._client = None
         self.action_count = 0
 
     @property
     def client(self):
         if not self._client:
-            self._client = CalumaClient(self.caluma_uri)
+            self._client = CalumaClient(
+                self.caluma_uri,
+                self.oidc_client_id,
+                self.oidc_client_secret,
+                self.oidc_token_uri,
+            )
         return self._client
 
     def get_intervalled_forms(self):
