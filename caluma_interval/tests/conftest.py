@@ -10,7 +10,7 @@ from caluma_interval.interval import IntervalManager
 
 @pytest.fixture
 def manager():
-    return IntervalManager(caluma_uri="http://caluma:8000/graphql")
+    return IntervalManager(caluma_endpoint="http://caluma:8000/graphql")
 
 
 @pytest.fixture

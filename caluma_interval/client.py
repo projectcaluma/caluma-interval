@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class CalumaClient:
     def __init__(
         self,
-        endpoint=env("CALUMA_URI", default="http://caluma/graphql"),
+        endpoint=env("CALUMA_ENDPOINT", default="http://caluma:8000/graphql"),
         oidc_client_id=env("OIDC_CLIENT_ID", default=None),
         oidc_client_secret=env("OIDC_CLIENT_SECRET", default=None),
         oidc_token_uri=env("OIDC_TOKEN_URI", default=None),

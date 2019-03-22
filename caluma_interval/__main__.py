@@ -30,12 +30,14 @@ def parse_arguments(args):
 
     parser.add_argument(
         "-c",
-        "--caluma-uri",
+        "--caluma-endpoint",
         metavar="STRING",
         type=str,
         help='defaults to "%(default)s"',
     )
-    parser.set_defaults(caluma_uri=env("CALUMA_URI", default="http://caluma/graphql"))
+    parser.set_defaults(
+        caluma_endpoint=env("CALUMA_ENDPOINT", default="http://caluma:8000/graphql")
+    )
     parser.add_argument("-i", "--oidc-client-id", metavar="STRING", type=str)
     parser.set_defaults(oidc_client_id=env("OIDC_CLIENT_ID", default=None))
     parser.add_argument("-s", "--oidc-client-secret", metavar="STRING", type=str)
@@ -68,7 +70,12 @@ def main():
         else:
             l.level = logging.INFO
 
-    manager = interval.IntervalManager(caluma_uri=args.caluma_uri)
+    manager = interval.IntervalManager(
+        caluma_endpoint=args.caluma_endpoint,
+        oidc_client_id=args.oidc_client_id,
+        oidc_client_secret=args.oidc_client_secret,
+        oidc_token_uri=args.oidc_token_uri,
+    )
     try:
         manager.run()
     except Exception as e:

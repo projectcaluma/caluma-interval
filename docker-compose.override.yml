@@ -5,8 +5,6 @@ services:
     build:
       args:
         - requirements=requirements-dev.txt
-    environment:
-      - CALUMA_URI=http://caluma:8000/graphql
     volumes:
       - ./:/app
 
