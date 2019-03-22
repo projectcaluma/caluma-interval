@@ -7,7 +7,7 @@
 [Caluma](https://caluma.io/) companion app for periodic usage of forms.
 
 
-## Intervalled forms
+## Periodic usage of forms
 
 There are forms you might want to use periodically. This project adds support for this
 by utilizing the `meta`-field of forms.
@@ -32,7 +32,7 @@ This will make sure, that exactly two weeks after the last refill, a new case wi
 opened for this form.
 
 Now let's say, it's important to you, that this case is always opened on a monday
-(shortening the interval if needed). Further you want to set a startdate, to make sure
+(shortening the interval if needed). Further you want to set a start date, to make sure
 no case will be opened before that.
 
 This can be achieved with following interval:
@@ -49,10 +49,11 @@ This can be achieved with following interval:
 
 ## Features
 
- * Handle intervalled forms
- * Optionally set a startdate
+ * Handle periodic usage of forms
+ * Optionally set a start date
  * Optionally force a specific weekday
  * Will never start multiple cases for the same form
+
 
 ## Meta field
 
@@ -104,17 +105,17 @@ The slug for the corresponding workflow.
 
 ## Configuration
 You can configure caluma_interval with environment variables or CLI arguments, whereas
-Cli arguments take precedence.
+CLI arguments take precedence.
 
 ```
 usage: __main__.py [-h] [-c STRING] [-i STRING] [-s STRING] [-u STRING] [-d]
                    [-v]
 
-Caluma companion app for handling intervalled forms
+Caluma companion app for periodic usage of forms
 
 optional arguments:
   -h, --help            show this help message and exit
-  -c STRING, --caluma-uri STRING
+  -c STRING, --caluma-endpoint STRING
                         defaults to "http://caluma:8000/graphql"
   -i STRING, --oidc-client-id STRING
   -s STRING, --oidc-client-secret STRING
@@ -123,27 +124,31 @@ optional arguments:
   -v, --version         show program's version number and exit
 ```
 
-The corresponding environment varibles are:
- * CALUMA_URI
+The corresponding environment variables are:
+ * CALUMA_ENDPOINT - defaults to `http://caluma:8000/graphql`
  * OIDC_CLIENT_ID
  * OIDC_CLIENT_SECRET
  * OIDC_TOKEN_URI
+
+Additional environment variables for when using the docker image:
+ * CALUMA_HOST - defaults to `caluma`
+ * CALUMA_PORT - defaults to `8000`
 
 To enable oidc authentication over plain http (only for testing!), set
 `OAUTHLIB_INSECURE_TRANSPORT` to `1`.
 
 
 ## Authentication
-As caluma uses OpenID Connect (OIDC), we need to fetch a token from the OIDC provider.
+As Caluma uses OpenID Connect (OIDC), we need to fetch a token from the OIDC provider.
 
 For this you have to provide a client id, client secret and a token uri.
 
-If none of them are provided, the client will make unauthenticated request, which
+If none of them are provided, the client will make unauthenticated requests, which
 (hopefully) will fail in your prod setup.
 
 ## ValidationClass
 
-You may want to add a custom ValidationClass to caluma in order to validate the content
+You may want to add a custom ValidationClass to Caluma in order to validate the content
 of `meta['interval']`:
 
 ```python
