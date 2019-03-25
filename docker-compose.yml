@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   interval:
-    image: projectcaluma/caluma-interval:latest
+    image: projectcaluma/caluma-interval:latest@sha256:aa1df6ac8732549a078bc8fa0433e6ec8f40e455af1d328158ac5a32beed9372
     build:
       context: .
     depends_on:
