@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 
+import pytest
 from isodate.duration import Duration
 
 
@@ -8,19 +9,25 @@ def test_get_intervalled_forms(manager, create_forms, cleanup_db):
     assert len(forms) == 2
 
 
-def test_parse_interval(manager):
-    test_strings = [
-        {
-            "value": "2018-03-01/P1Y2M10D",
-            "expected": [Duration(10, 0, 0, years=1, months=2), date(2018, 3, 1)],
-        },
-        {"value": "P2W", "expected": [timedelta(14), None]},
-    ]
-
-    for test in test_strings:
-        result = manager.parse_interval(test["value"])
-        assert result[0] == test["expected"][0]
-        assert result[1] == test["expected"][1]
+@pytest.mark.parametrize(
+    "value,exp_startdate,exp_duration",
+    [
+        (
+            "2018-03-01/P1Y2M10D",
+            Duration(10, 0, 0, years=1, months=2),
+            date(2018, 3, 1),
+        ),
+        ("P2W", timedelta(14), None),
+        ("P1Y2M1p0D", False, False),
+        ("P1Y2M10DT2H30M", False, False),
+        ("not a date/P2W", False, False),
+        ("2018-03-01/P2W/", False, False),
+    ],
+)
+def test_parse_interval(manager, value, exp_startdate, exp_duration):
+    startdate, duration = manager.parse_interval(value)
+    assert startdate == exp_startdate
+    assert duration == exp_duration
 
 
 def test_run_new_form(client, manager, create_form_to_workflow, cleanup_db):

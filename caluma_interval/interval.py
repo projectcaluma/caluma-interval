@@ -1,8 +1,9 @@
 import logging
+import re
 from datetime import date, timedelta
 
 from envparse import env
-from isodate import parse_date, parse_duration
+from isodate import isoerror, parse_date, parse_duration
 
 from caluma_interval.client import CalumaClient
 from caluma_interval.queries import intervalled_forms_query, start_case_mutation
@@ -14,6 +15,19 @@ __title__ = "caluma_interval"
 __description__ = "Caluma companion app for periodic usage of forms"
 __version__ = "0.0.1"
 __author__ = "Adfinis SyGroup"
+
+
+ISO8601_PERIOD_DATE_REGEX = re.compile(
+    r"""
+     ^P(?!$)
+     (\d+(?:[,.]\d+)?Y)?
+     (\d+(?:[,.]\d+)?M)?
+     (\d+(?:[,.]\d+)?W)?
+     (\d+(?:[,.]\d+)?D)?
+     $
+ """,
+    re.VERBOSE,
+)
 
 
 class IntervalManager:
@@ -61,15 +75,43 @@ class IntervalManager:
         self.action_count += 1
 
     @staticmethod
-    def parse_interval(interval):
-        start = None
+    def parse_startdate(value):
+        try:
+            return parse_date(value)
+        except isoerror.ISO8601Error:
+            return False
+
+    @staticmethod
+    def parse_duration(value):
+        if not re.match(ISO8601_PERIOD_DATE_REGEX, value):
+            return False
+        try:
+            return parse_duration(value)
+        # We exclude this from coverage, because it should be prevented by our
+        # own regex check
+        except isoerror.ISO8601Error:  # pragma: no cover
+            return False
+
+    def parse_interval(self, interval):
+        def handle_parse_error(part, value):
+            logger.error(f"Couldn't parse {part} {value}")
+            return False, False
+
         interval = interval.split("/")
+        if len(interval) > 2 or len(interval) < 1:
+            return handle_parse_error("interval", interval)
+
+        start = None
         if len(interval) == 2:
-            start = parse_date(interval[0])
-            interval = parse_duration(interval[1])
-        elif len(interval) == 1:
-            interval = parse_duration(interval[0])
-        return interval, start
+            start = self.parse_startdate(interval[0])
+            if start is False:
+                return handle_parse_error("startdate", interval[0])
+
+        duration = self.parse_duration(interval[-1])
+        if duration is False:
+            return handle_parse_error("duration", interval[-1])
+
+        return duration, start
 
     @staticmethod
     def get_last_run(form):
@@ -119,6 +161,8 @@ class IntervalManager:
         if last_run is False:
             return
         interval, start = self.parse_interval(form["meta"]["interval"]["interval"])
+        if interval is False:
+            return
         weekday = form["meta"]["interval"].get("weekday")
 
         if self.needs_action(last_run, interval, start, weekday):
