@@ -58,7 +58,11 @@ class CalumaClient:
 
     def _send(self, query, variables):
         data = {"query": query, "variables": variables}
-        headers = {"Accept": "application/json", "Content-Type": "application/json"}
+        headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Caluma-Companion": "interval",
+        }
 
         token = self.get_token()
         if token:

@@ -53,6 +53,7 @@ def test_authenticated_request(mocker, auth_client, token):
         {
             "Accept": "application/json",
             "Content-Type": "application/json",
+            "Caluma-Companion": "interval",
             "Authorization": f"Bearer {token['access_token']}",
         },
     )

@@ -215,6 +215,21 @@ class FormIntervalValidation(BaseValidation):
         validate_interval(interval['interval'])
 ```
 
+## VisibilityClass
+
+Make sure, that caluma-interval has access to `Forms`, `Documents` and `Cases`.
+
+```python
+class MyVisibility(BaseVisibility):
+    @filter_queryset_for(Node)
+    def filter_queryset(self, node, queryset, info):
+        if info.context.META.get(
+            "HTTP_CALUMA_COMPANION", None
+        ) == "interval" and node in [Form, Document, Case]:
+            return queryset
+```
+
+
 ## docker-compose integration
 
 ```
