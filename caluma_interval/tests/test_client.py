@@ -49,8 +49,8 @@ def test_authenticated_request(mocker, auth_client, token):
     OAuth2Session.fetch_token.assert_called()
     requests.post.assert_called_with(
         "http://caluma:8000/graphql",
-        {"query": intervalled_forms_query, "variables": "null"},
-        {
+        json={"query": intervalled_forms_query, "variables": "null"},
+        headers={
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Authorization": f"Bearer {token['access_token']}",

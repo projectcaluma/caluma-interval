@@ -64,5 +64,5 @@ class CalumaClient:
         if token:
             headers["Authorization"] = f"Bearer {token['access_token']}"
 
-        response = requests.post(self.endpoint, data, headers)
+        response = requests.post(self.endpoint, json=data, headers=headers)
         return response.json()
