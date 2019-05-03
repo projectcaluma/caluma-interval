@@ -1,4 +1,4 @@
-FROM python:3.6.8-alpine3.9@sha256:c3b0a0317d0759a0c0b8cf2b2c60ea09729bc9b7faf464ee67434f45de2bb3d1
+FROM python:3.6.8-alpine3.9@sha256:54b604a4f1937b370d2daf2344594dbd76305048b705ca786cd467125f36759d
 
 ARG requirements=requirements.txt
 WORKDIR /app
