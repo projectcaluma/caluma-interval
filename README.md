@@ -225,3 +225,31 @@ interval:
   depends_on:
     - caluma
 ```
+
+## Contribution
+We use following tools in order to standardize development and releases:
+
+ * flake8
+ * black
+ * isort
+ * commitlint
+
+### pre-commit hooks
+
+Pre commit hooks is an additional option instead of executing checks in your editor of choice.
+
+First create a virtualenv with the tool of your choice before running below commands:
+
+```bash
+pip install pre-commit
+pip install -r requirements-dev.txt -U
+pre-commit install
+```
+
+### commit-msg hook
+If you want to have your commit message automatically linted, execute below commands:
+
+```bash
+npm install @commitlint/{config-conventional,cli}
+ln -s "$(pwd)/commit-msg" .git/hooks/commit-msg
+```
