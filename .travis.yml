@@ -10,26 +10,42 @@ env:
   global:
     - DOCKER_COMPOSE_VERSION=1.23.1
 
-before_install:
-  # install newer compose version
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
+jobs:
+  include:
+    - stage: tests
+      name: "Tests"
+      before_install:
+        # install newer compose version
+        - sudo rm /usr/local/bin/docker-compose
+        - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+        - chmod +x docker-compose
+        - sudo mv docker-compose /usr/local/bin
 
-  # Workaround for https://github.com/travis-ci/travis-ci/issues/4842
-  # Let's stop postgresql
-  - sudo service postgresql stop
-  # wait for postgresql to shutdown
-  - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
+        # Workaround for https://github.com/travis-ci/travis-ci/issues/4842
+        # Let's stop postgresql
+        - sudo service postgresql stop
+        # wait for postgresql to shutdown
+        - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
+      install:
+        - docker-compose up -d --build
+        - npm install @commitlint/{config-conventional,travis-cli}
+      script:
+        - docker-compose up -d db caluma
+        - docker-compose run --rm interval black --check .
+        - docker-compose run --rm interval flake8
+        - ./node_modules/.bin/commitlint-travis
+        - docker-compose run --rm interval wait-for-it.sh db:5432
+        - docker-compose run --rm interval wait-for-it.sh caluma:8000
+        - docker-compose run --rm interval pytest --no-cov-on-fail --cov
 
-install:
-  - docker-compose up -d --build
-
-script:
-  - docker-compose up -d db caluma
-  - docker-compose run --rm interval black --check .
-  - docker-compose run --rm interval flake8
-  - docker-compose run --rm interval wait-for-it.sh db:5432
-  - docker-compose run --rm interval wait-for-it.sh caluma:8000
-  - docker-compose run --rm interval pytest --no-cov-on-fail --cov
+    - stage: release
+      if: branch = release and type = push
+      script: skip
+      deploy:
+        provider: script
+        skip_cleanup: true
+        on:
+          branch: release
+        script:
+          - nvm install lts/*
+          - npx semantic-release
