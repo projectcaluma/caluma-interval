@@ -126,3 +126,6 @@ def test_needs_action(manager):
 
     kwargs["start"] = date.today() + timedelta(days=5)
     assert not manager.needs_action(**kwargs)
+
+    kwargs["start"] = None
+    assert manager.needs_action(**kwargs)
