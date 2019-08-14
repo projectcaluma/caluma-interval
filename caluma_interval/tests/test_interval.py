@@ -3,6 +3,8 @@ from datetime import date, timedelta
 import pytest
 from isodate.duration import Duration
 
+from ..queries import start_case_mutation
+
 
 def test_get_intervalled_forms(manager, create_forms, cleanup_db):
     forms = manager.get_intervalled_forms()
@@ -126,3 +128,18 @@ def test_needs_action(manager):
 
     kwargs["start"] = date.today() + timedelta(days=5)
     assert not manager.needs_action(**kwargs)
+
+
+def test_multiple_forms_one_running_case(
+    client, manager, create_form_to_workflow, cleanup_db
+):
+    """
+    Test for #64
+    """
+    # start case for first form
+    variables = {
+        "case": {"form": "my-first-interval-form", "workflow": "my-test-workflow"}
+    }
+    client.execute(start_case_mutation, variables)
+    manager.run()
+    assert manager.action_count == 1
