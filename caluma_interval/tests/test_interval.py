@@ -3,6 +3,8 @@ from datetime import date, timedelta
 import pytest
 from isodate.duration import Duration
 
+from ..interval import IntervalManager
+
 
 def test_get_intervalled_forms(manager, create_forms, cleanup_db):
     forms = manager.get_intervalled_forms()
@@ -129,3 +131,10 @@ def test_needs_action(manager):
 
     kwargs["start"] = None
     assert manager.needs_action(**kwargs)
+
+
+def test_fail_processing(mocker, manager, create_form_to_workflow, cleanup_db):
+    mocker.patch.object(IntervalManager, "handle_form")
+    IntervalManager.handle_form.side_effect = Exception
+    # No exception should be raised
+    manager.run()

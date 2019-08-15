@@ -174,5 +174,8 @@ class IntervalManager:
         forms = self.get_intervalled_forms()
         logger.info(f"Got {len(forms)} intervalled forms from caluma.")
         for form in forms:
-            self.handle_form(form["node"])
+            try:
+                self.handle_form(form["node"])
+            except Exception:
+                logger.exception(f"Couldn't process form \"{form['node']['slug']}\"!")
         logger.info(f"Started {self.action_count} case(s).")
