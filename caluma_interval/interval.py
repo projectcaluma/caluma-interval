@@ -146,14 +146,16 @@ class IntervalManager:
         return dt + timedelta(days=gap)
 
     def needs_action(self, last_run, interval, start, weekday=None):
-        now = date.today()
-        if start > now:
+        today = date.today()
+        if start is None:
+            start = today
+        if start > today:
             return False
         next_run = last_run + interval
         if weekday is not None:
             if not next_run.weekday() == weekday:
                 next_run = self.get_last_weekday(next_run, weekday)
-        if next_run < now:
+        if next_run < today:
             return True
 
     def handle_form(self, form):
