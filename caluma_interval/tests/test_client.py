@@ -1,6 +1,4 @@
-import pytest
 import requests
-from requests.exceptions import MissingSchema
 from requests_oauthlib import OAuth2Session
 
 from caluma_interval.queries import intervalled_forms_query
@@ -26,12 +24,6 @@ query allForms {
 
     resp = client.execute(query)
     assert "allForms" in resp["data"]
-
-
-def test_client_exception(client):
-    client.endpoint = "not a uri"
-    with pytest.raises(MissingSchema):
-        client.execute("not a query")
 
 
 def test_get_token(mocker, auth_client, token):
