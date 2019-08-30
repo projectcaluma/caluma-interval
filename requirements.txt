@@ -1,4 +1,4 @@
 envparse==0.2.0
 isodate==0.6.0
-requests==2.21.0
+requests==2.22.0
 requests-oauthlib==1.2.0
