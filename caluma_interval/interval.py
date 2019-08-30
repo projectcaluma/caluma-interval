@@ -8,13 +8,15 @@ from isodate import isoerror, parse_date, parse_duration
 from caluma_interval.client import CalumaClient
 from caluma_interval.queries import intervalled_forms_query, start_case_mutation
 
+from . import interval_metadata
+
 logger = logging.getLogger(__name__)
 
 
-__title__ = "caluma_interval"
-__description__ = "Caluma companion app for periodic usage of forms"
-__version__ = "0.0.0"
-__author__ = "Adfinis SyGroup"
+__title__ = interval_metadata.__title__
+__description__ = interval_metadata.__description__
+__version__ = interval_metadata.__version__
+__author__ = interval_metadata.__author__
 
 
 ISO8601_PERIOD_DATE_REGEX = re.compile(
