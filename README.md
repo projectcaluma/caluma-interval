@@ -244,12 +244,6 @@ First create a virtualenv with the tool of your choice before running below comm
 pip install pre-commit
 pip install -r requirements-dev.txt -U
 pre-commit install
-```
-
-### commit-msg hook
-If you want to have your commit message automatically linted, execute below commands:
-
-```bash
-npm install @commitlint/{config-conventional,cli}
-ln -s "$(pwd)/commit-msg" .git/hooks/commit-msg
+pre-commit install --hook=pre-commit
+pre-commit install --hook=commit-msg
 ```

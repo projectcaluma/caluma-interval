@@ -28,17 +28,12 @@ jobs:
         - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
       install:
         - docker-compose up -d --build
-        - npm install @commitlint/{config-conventional,travis-cli}
+        - pip install $(grep "gitlint" ./requirements-dev.txt)
       script:
         - docker-compose up -d db caluma
         - docker-compose run --rm interval black --check .
         - docker-compose run --rm interval flake8
-        - ./node_modules/.bin/commitlint-travis
+        - gitlint --commits ${TRAVIS_BRANCH}..HEAD lint
         - docker-compose run --rm interval wait-for-it.sh db:5432
         - docker-compose run --rm interval wait-for-it.sh caluma:8000
         - docker-compose run --rm interval pytest --no-cov-on-fail --cov
-      after_success:
-        - git config --global user.name "semantic-release (via TravisCI)"
-        - git config --global user.email "semantic-release@travis"
-        - pip install python-semantic-release
-        - semantic-release publish
