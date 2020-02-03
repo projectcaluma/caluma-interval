@@ -127,16 +127,16 @@ def cleanup_db():
     cur = conn.cursor()
     fmt_str = "DELETE FROM {};"
     tables = [
-        "workflow_workitem",
-        "workflow_case",
-        "form_document",
-        "form_form",
-        "workflow_taskflow",
-        "workflow_flow",
-        "workflow_workflow_start_tasks",
-        "workflow_workflow_allow_forms",
-        "workflow_task",
-        "workflow_workflow",
+        "caluma_workflow_workitem",
+        "caluma_workflow_case",
+        "caluma_form_document",
+        "caluma_form_form",
+        "caluma_workflow_taskflow",
+        "caluma_workflow_flow",
+        "caluma_workflow_workflow_start_tasks",
+        "caluma_workflow_workflow_allow_forms",
+        "caluma_workflow_task",
+        "caluma_workflow_workflow",
     ]
     for table in tables:
         delete_sql = fmt_str.format(table)
