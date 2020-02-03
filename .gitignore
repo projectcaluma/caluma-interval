@@ -73,7 +73,3 @@ target/
 
 # IDE specific configurations
 .idea/
-
-# npm
-node_modules/
-package-lock.json
