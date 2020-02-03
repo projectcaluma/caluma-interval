@@ -2,5 +2,5 @@
 
 __title__ = "caluma_interval"
 __description__ = "Caluma companion app for periodic usage of forms"
-__version__ = "1.0.1"
+__version__ = "2.0.0"
 __author__ = "Adfinis SyGroup"
