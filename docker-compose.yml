@@ -16,7 +16,7 @@ services:
     command: -p ${DATABASE_PORT:-5432}
 
   caluma:
-    image: projectcaluma/caluma:latest@sha256:1b6810134b1e2d6aa48a8605e0d0411d217c1af6c458f9c4a62e795aaec4a371
+    image: projectcaluma/caluma:latest@sha256:fec1eec3b5f6118a7f2f631e8271648c011ceae9c5547811bce93b4c64a9232f
     ports:
       - "8000:8000"
     depends_on:
