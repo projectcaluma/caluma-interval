@@ -8,7 +8,7 @@ services:
       - caluma
 
   db:
-    image: postgres:9.6-alpine@sha256:7e313be97b7ba2d7f8486ed46e8050aec74f628e1b8ba21a1aea36875f084c4f
+    image: postgres:9.6-alpine@sha256:aa3497cd079ebef6e2627a3d668dfbca9e4347d8376f2ad2d160005d6be8535f
     environment:
       - POSTGRES_USER=caluma
     volumes:
