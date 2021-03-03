@@ -1,0 +1,40 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron:  '0 0 * * 0'
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the project
+        run: |
+          echo "UID=$(id --user)" > .env
+          docker-compose up -d --build
+      - name: Lint the code
+        run: |
+          docker-compose run --rm interval black --check .
+          docker-compose run --rm interval flake8
+      - name: Run pytest
+        run: |
+          docker-compose run --rm interval wait-for-it.sh db:5432
+          docker-compose run --rm interval wait-for-it.sh caluma:8000
+          docker-compose run --rm interval pytest --no-cov-on-fail --cov
+  gitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.7'
+      - name: Install gitlint
+        run: pip install gitlint
+      - name: Run gitlint
+        run: gitlint --contrib contrib-title-conventional-commits
