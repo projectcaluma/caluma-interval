@@ -1,0 +1,39 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: black
+    versions:
+    - 21.4b0
+    - 21.4b1
+  - dependency-name: pytest-mock
+    versions:
+    - 3.5.1
+  - dependency-name: flake8
+    versions:
+    - 3.9.0
+  - dependency-name: gitlint
+    versions:
+    - 0.15.0
+  - dependency-name: python-semantic-release
+    versions:
+    - 7.15.3
+  commit-message:
+    prefix: chore
+    include: scope
+- package-ecosystem: docker
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: python
+    versions:
+    - ">=3.7"
+  commit-message:
+    prefix: chore
+    include: scope
