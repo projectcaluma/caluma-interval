@@ -219,7 +219,7 @@ class FormIntervalValidation(BaseValidation):
 
 ```
 interval:
-  image: projectcaluma/caluma-interval:latest
+  image: ghcr.io/projectcaluma/caluma-interval:latest
   build:
     context: .
   depends_on:
