@@ -10,7 +10,7 @@ mutation startCase($case: StartCaseInput!) {
 
 intervalled_forms_query = """\
 query allInterForms {
-  allForms (metaHasKey: "interval") {
+  allForms (filter: [{ metaHasKey: "interval" }]) {
     pageInfo {
       startCursor
       endCursor
