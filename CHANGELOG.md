@@ -1,3 +1,9 @@
+# v3.0.0 (2022-10-26)
+
+### Fix
+
+* replace outdated filtering syntax for queries (6e63070064e2f72ae3226a919bbecf876e31d26f)
+
 # v2.0.0 (2020-02-03)
 
 ### Fix
